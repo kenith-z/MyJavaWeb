@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<actionlist>
+	<!-- MVC测试 -->
+	<action name="Hello" class="cn.gzccc.action.HelloAction" desc="MVC测试">
+		<view>/views/idiom/HelloOut.jsp</view>
+	</action>
+	<!-- 用户登录 -->
+	<action name="Login" class="cn.gzccc.action.LoginAction" desc="用户登录">
+		<view>/views/Welcome.jsp</view>
+	</action>
+	<!-- 成语查询 -->
+	<action name="Query" class="cn.gzccc.action.QueryAction" desc="中国成语智能查询系统">
+		<view name="download">/views/Download.jsp</view>
+		<view>/views/idiom/Query.jsp</view>
+	</action>
+	<!-- 成语接龙 -->
+	<action name="Dragon" class="cn.gzccc.action.DragonAction" desc="成语接龙">
+		
+		<view>/views/idiom/Dragon.jsp</view>
+	</action>
+	<!-- 成语接龙 -->
+	<action name="Shape" class="cn.gzccc.action.ShapeAction" desc="字形成语">
+		<view>/views/idiom/Shape.jsp</view>
+	</action>
+	<!-- 添加成语 -->
+	<action name="Append" class="cn.gzccc.action.AppendAction" desc="添加成语">
+		<view>/views/idiom/Edit.jsp</view>
+	</action>
+	<!-- 删除成语 -->
+	<action name="Remove" class="cn.gzccc.action.RemoveAction" desc="删除成语">
+		<!-- 将目标视图定向到另一个交易节点(切勿定向到自身) -->
+		<view>/Query.act</view>
+	</action>
+	<!-- 修改成语 -->
+	<action name="Edit" class="cn.gzccc.action.EditAction" desc="编辑成语">
+	<view name="show">/views/idiom/Detail.jsp</view>
+		<view>/views/idiom/Edit.jsp</view>
+	</action>
+</actionlist>

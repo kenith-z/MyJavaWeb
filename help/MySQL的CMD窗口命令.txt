@@ -1,0 +1,19 @@
+﻿##首先要确保环境变量已经包含mysql的bin目录，或当前路径为mysql的bin目录。
+
+//启动服务器（机器启动时一般会启动mysql服务器）
+mysqld -u root
+
+//停止服务器（一般不用）
+mysqladmin -u root shutdown -p
+
+//以root用户进入mysql命令行（未选定数据库）
+mysql -uroot -ppassword
+
+//以特定用户进入mysql命令行（选定数据库）
+mysql -umyweb -ppassword mywebdb
+
+//备份
+mysqldump -u root -ppassword --default-character-set=utf8 mywebdb cn_idiom > d:/cn_idiom.sql
+
+//导入
+mysql -u root -ppassword mywebdb < d:/cn_idiom.sql

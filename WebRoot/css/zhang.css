@@ -1,0 +1,8 @@
+*{ margin:0px auto; padding:0px}
+body{ font-size:14px; font-family:"Î¢ÈíÑÅºÚ"; color:#333;}
+li{ list-style:none}
+a{ text-decoration:none; color:#333;}
+a:hover{ color:red;}
+
+#flex{
+	display: flex;flex-direction: row;width:1000px;height:1000px;flex-wrap:wrap;}

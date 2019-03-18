@@ -1,0 +1,196 @@
+body {
+	font-size:12px;
+	font-family:Tahoma,Verdana;
+	background-color:transparent;
+	cursor:default;
+	margin-top:10px;
+	margin-left:10px;
+	margin-right:10px;
+	scrollbar-base-color: #FFFFFF;
+	scrollbar-track-color:#FFFFFF;
+	scrollbar-face-color:#FFFFFF;
+	scrollbar-arrow-color:#000000;
+	scrollbar-3dlight-color:#CCCCCC;
+	scrollbar-shadow-color:#FFFFFF;
+	scrollbar-darkshadow-color:#FFFFFF;
+	
+}
+table {font-size:12px;}
+tr {line-height:20px;}
+td {font-size:12px; table-layout:fixed; word-break:break-all;}
+
+input {
+	font-family:Verdana,Arial,Helvetica,Sans-serif,宋体; text-decoration:None; border-top-width:1px; border-left-width:1px; font-size:12px; border-bottom-width:1px; border-right-width:1px;
+}
+option {
+	font-family:Verdana,Arial,Helvetica,Sans-serif,宋体; text-decoration:None; border-top-width:1px; border-left-width:1px; font-size:12px; border-bottom-width:1px; border-right-width:1px;
+}
+textarea {
+	font-family:Verdana,Arial,Helvetica,Sans-serif,宋体; text-decoration:None; border-top-width:1px; border-left-width:1px; font-size:12px; border-bottom-width:1px; border-right-width:1px;
+}
+select {
+	font-family:Verdana,Arial,Helvetica,Sans-serif,宋体; border-top-width:1px; border-left-width:1px; font-size:12px; border-bottom-width:1px; border-right-width:1px;
+}
+a {
+	color: #555555; text-decoration: none
+}
+a:hover {
+	color: #FF8C40; text-decoration: underline
+}
+
+.quote {
+	BORDER-RIGHT: #CCCCCC 1px dotted; TABLE-LAYOUT: fixed; PADDING-RIGHT: 5px; BORDER-TOP: #CCCCCC 1px dotted; PADDING-LEFT: 5px; BACKGROUND: #F8F8F8; PADDING-BOTTOM: 5px; MARGIN: 5px; BORDER-LEFT: #CCCCCC 1px dotted; PADDING-TOP: 5px; BORDER-BOTTOM: #CCCCCC 1px dotted
+}
+
+.top {background-color: #E1E9EE; font-size:12px; font-family: "Times New Roman";}
+.header {background-color: #0D87BE; font-size:14px; font-weight: bolder; color:#FFFFFF}
+.bg5 {background-color: #D7D7D7; font-size:12px; font-family: "Times New Roman";}
+.bg6 {background-color: #C0C0C0; font-size:12px; font-family: "Times New Roman";}
+.bg7 {background-color: #A9A9A9; font-size:12px; font-family: "Courier New"; font-weight:bold;}
+.bg8 {background-color: #A5D0DC; font-size:12px; font-family: "Courier New"; font-weight:bold;}
+
+input.text0{background-color:#FFFFFF; border:1px #000000 solid;}
+select.select0{FONT-SIZE:9pt; background:#D9D9F3;}
+input.norButton {
+	background-color: #DDDDDD;
+	border-top: 1px solid #EEEEEE;
+	border-bottom: 1px solid #666666;
+	border-left: 1px solid #EEEEEE;
+	border-right: 1px solid #666666;
+}
+input.tinyButton {
+	font-family: "宋体";
+	font-size: 9pt;
+	color: #333333;
+	cursor: hand;
+	background-color: #EEEEEE;
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #666666;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #666666;
+	padding: 1px;
+	height: 19px;
+}
+input.colorButton {
+	background-color: #BDB76B;
+	border-color: #006600;
+	border-width: 1px;
+}
+input.imgButton01 {
+	font-size: 9pt;
+	font-style: normal;
+	font-variant: normal;
+	color: #000000;
+	cursor: hand;
+	background: transparent url(../images/button01.jpg) no-repeat center top;
+	border: 0 solid #6699FF;
+	height: 22px;
+	width: 70px;
+	line-height: normal;
+} 
+.ALink {FONT-SIZE:9pt; COLOR:#FFFFFF; TEXT-DECORATION:none;}
+.ALink:hover {FONT-SIZE:9pt; COLOR:#FFFFFF; TEXT-DECORATION:underline;}
+
+.BLink {FONT-SIZE:9pt; COLOR:#000000; TEXT-DECORATION:none;}
+.BLink:hover {FONT-SIZE:9pt; COLOR:#000000; TEXT-DECORATION:underline;}
+
+.CLink {FONT-SIZE:10pt; COLOR:#009900; TEXT-DECORATION:none;}
+.CLink:hover {FONT-SIZE:10pt; COLOR:#009900; TEXT-DECORATION:underline;}
+
+.DLink {FONT-SIZE:12pt; COLOR:#0066CC; TEXT-DECORATION:none;}
+.DLink:hover {FONT-SIZE:12pt; COLOR:#0066CC; TEXT-DECORATION:underline;}
+
+.ELink {FONT-SIZE:9pt; COLOR:#0066CC; TEXT-DECORATION:none;}
+.ELink:hover {FONT-SIZE:9pt; COLOR:#FFCC00; TEXT-DECORATION:underline;}
+
+.FLink {FONT-SIZE:10pt; COLOR:#006600; TEXT-DECORATION:none;}
+.FLink:hover {FONT-SIZE:10pt; COLOR:#009900; TEXT-DECORATION:underline;}
+
+.GLink {FONT-SIZE:10pt; COLOR:#FF9900; TEXT-DECORATION:none;}
+.GLink:hover {FONT-SIZE:10pt; COLOR:#FF9900; TEXT-DECORATION:none;}
+
+#theform {
+	margin-top:8px;
+	margin-bottom:8px;
+}
+
+#InfoHead {
+	;
+}
+#InfoHead tr {
+	line-height:24px;
+	text-align:left;
+	vertical-align:middle;
+}
+#InfoHead td {
+	padding:2;
+	font:12px;
+}
+
+#OperHead {
+	border-collapse:collapse;
+}
+#OperHead tr {
+	line-height:24px;
+	text-align:left;
+	vertical-align:middle;
+}
+#OperHead td {
+	padding:2;
+}
+
+#DataGrid {
+	border-width:1;
+	border-collapse:collapse;
+	border-color:#7B68EE;
+}
+#DataGrid tr {
+	line-height:20px;
+	text-align:center;
+	background-color:expression(this.sectionRowIndex==0?"#C0C0C0":((this.sectionRowIndex%2==0)?"#E6E6FA":"#EEEEEE"));
+	color:expression(this.sectionRowIndex==0?"#000000":"");
+	TableSelect:expression(
+		this.sectionRowIndex==0?"":(
+			onmouseover = function(){
+				this.style.backgroundColor = (this.sectionRowIndex==0?"#C0C0C0":"#FFDAB9")
+			},
+			onmouseout =  function(){
+				this.style.backgroundColor = (this.sectionRowIndex==0?"#C0C0C0":
+											 (this.sectionRowIndex%2==0?"#E6E6FA":"#EEEEEE"))
+			}
+		)
+	)
+}
+#DataGrid td {
+	padding:2;
+	border-color:#CCCCCC;
+}
+
+#DataView {
+	border-width:1;
+	border-collapse:collapse;
+	border-color:#000000;
+}
+#DataView tr {
+	line-height:32px;
+	text-align:center;
+}
+#DataView td {
+	padding:2;
+	border-color:#000000;
+}
+
+#DataInput {
+	border-width:1;
+	border-collapse:collapse;
+	border-color:#CCCCCC;
+	background-color:#CCFF99;
+}
+#DataInput tr {
+	line-height:36px;
+	text-align:left;
+}
+#DataInput td {
+	padding:4;
+	border-color:#CCCCCC;
+}
