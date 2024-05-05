@@ -83,7 +83,7 @@ public class AppendAction extends BaseAction implements IAction{
 							String postFix = fileName.substring(fileName.lastIndexOf("."));//取出文件名后缀
 							imgName = imgName+"_"+DateUtil.getFlowNo()+postFix;
 							//将临时文件复制成为正式图片文件
-							String imgPath = rootPath+"/image/idiom/"+imgName;
+							String imgPath = rootPath+"/upload/image/idiom/"+imgName;
 							File imgFile = new File(imgPath);
 							FileUtil.copy(tempFile, imgFile);
 						}else{

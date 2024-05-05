@@ -6,10 +6,10 @@ package cn.gzccc.run;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 
 import cn.gzccc.util.DBHelper;
 
@@ -56,7 +56,7 @@ public class MyStartup extends HttpServlet {
 			DBHelper dbh = DBHelper.getInstance();//获取数据库助手实例
 			List<Map<String, String>> list = dbh.query(sql);//执行查询，返回结果集
 			int count = list.size();//记录数
-			System.out.println("连接数据库成功,共有"+count+"条成语。\n");
+			System.out.println("连接数据库成功，共有"+count+"条成语。\n");
 		} catch (Exception e) {
 			System.err.println("连接数据库戳错【"+e.getMessage()+"】");
 			e.printStackTrace();

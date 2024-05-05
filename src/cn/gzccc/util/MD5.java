@@ -1,5 +1,5 @@
-ï»¿/*
- * MD5åŠ å¯†å·¥å…·
+/*
+ * MD5¼ÓÃÜ¹¤¾ß
  * Author: YXK
  * Date: 2014-12-29
  */
@@ -14,7 +14,7 @@ import java.security.MessageDigest;
 
 public class MD5 {
 
-	// è®¡ç®—æ–‡ä»¶MD5å€¼
+	// ¼ÆËãÎÄ¼şMD5Öµ
 	public static String encrypt(File file) throws Exception {
 		MessageDigest md5 = null;
 		FileInputStream fis = null;
@@ -44,7 +44,7 @@ public class MD5 {
 		return hexString.toString();
 	}
 	
-	// å°†å¯†ç è½¬åŒ–ä¸º32ä½ä¸å¯é€†çš„å­—ç¬¦ä¸²
+	// ½«ÃÜÂë×ª»¯Îª32Î»²»¿ÉÄæµÄ×Ö·û´®
 	public static String encrypt(String kl) {
 		String mw, cmm;
 		int k, i, a, hf, lf, bytes = 16;

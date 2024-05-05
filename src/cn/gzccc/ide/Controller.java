@@ -1,270 +1,262 @@
 /*
- * MVCå¼€å‘æ¡†æ¶ä¹‹æ§åˆ¶å™¨
- * æ§åˆ¶å™¨çš„ä¸»è¦ä½œç”¨æ˜¯ä½œä¸ºå‰ç«¯é¡µé¢ä¸åå°ç¨‹åºçš„æ¡¥æ¢
+ * MVC¿ª·¢¿ò¼ÜÖ®¿ØÖÆÆ÷
+ * ¿ØÖÆÆ÷µÄÖ÷Òª×÷ÓÃÊÇ×÷ÎªÇ°¶ËÒ³ÃæÓëºóÌ¨³ÌĞòµÄÇÅÁº
  */
 package cn.gzccc.ide;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
+@MultipartConfig
 public class Controller extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
-	/*
-	 * ç›¸åº”å‰ç«¯é¡µé¢çš„è¯·æ±‚
-	 */
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// è·å–åº”ç”¨å¯¹è±¡
-		ServletContext application = super.getServletContext();
+    /*
+     * ÏàÓ¦Ç°¶ËÒ³ÃæµÄÇëÇó
+     */
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
 
-		/*
-		 * yiã€ç›¸åº”å‰ç«¯é¡µé¢çš„è¯·æ±‚
-		 */
-		// å°†é¡µé¢å‚æ•°è®¾ç½®åˆ°â€œé”®-å€¼â€å¯¹æ˜ å°„å¯¹è±¡ä¸­
-		Map<String, String> paramMap = new HashMap<String, String>();
-		if(ServletFileUpload.isMultipartContent(request)){
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        // »ñÈ¡Ó¦ÓÃ¶ÔÏó
+        ServletContext application = super.getServletContext();
 
-			/**æ–‡ä»¶ä¸Šä¼ ä»£ç å—ã€BEGINã€‘ï¼Œæš‚æ—¶åªæ”¯æŒå•ä¸ªæ–‡ä»¶ä¸Šä¼ **********************************************/
-			String rootPath = application.getRealPath("");
-			String uploadPath = rootPath + "/upload";
-			paramMap.put("uploadPath", uploadPath);//åå°äº¤æ˜“ç±»å¯ä»¥é€šè¿‡è¯¥å‚æ•°è·å–ä¸Šä¼ è·¯å¾„
-			FileItemFactory fif  = new DiskFileItemFactory();
-			ServletFileUpload upload = new ServletFileUpload(fif);//ä¸Šä¼ å¯¹è±¡
-			upload.setHeaderEncoding("UTF-8");
-			long maxFileSize = 4*1024*1024L;
-			upload.setSizeMax(maxFileSize);//è®¾ç½®ä¸Šä¼ æ–‡ä»¶çš„æœ€å¤§å­—èŠ‚æ•°
-			String fileName = null;//ä¸Šä¼ æ–‡ä»¶ä¿å­˜åçš„æ–‡ä»¶å
-			try{
-				List inputs = upload.parseRequest(request);//è§£æè¯·æ±‚å¯¹è±¡ï¼Œå¾—åˆ°è¡¨å•çš„æ‰€æœ‰æ•°æ®ï¼ŒåŒ…æ‹¬éæ–‡ä»¶åŸŸ
-				if(inputs != null){
-					Iterator items = inputs.iterator();
-					while(items.hasNext()){
-						FileItem fileItem = (FileItem)items.next();
-						if(fileItem.isFormField()){
-							//éæ–‡ä»¶åŸŸ
-							String key = fileItem.getFieldName();
-							String value = fileItem.getString();
-							value = new String(value.getBytes("ISO-8859-1"), "UTF-8");
-							paramMap.put(key, value);//ä¼ å…¥åˆ°äº¤æ˜“ç±»çš„å‚æ•°å¯¹è±¡
-							request.setAttribute(key, value);//è®¾ç½®åˆ°è¯·æ±‚å¯¹è±¡ä¸­çš„ç¯å¢ƒå˜é‡
-						}else{
-							//æ–‡ä»¶åŸŸ
-							if(fileName!=null) continue;//æš‚æ—¶åªæ”¯æŒå•ä¸ªæ–‡ä»¶ä¸Šä¼ 
-							if(fileItem.getSize() > maxFileSize){//é™åˆ¶æ–‡ä»¶å¤§å°
-								System.err.println("ä¸Šä¼ æ–‡ä»¶å¤ªå¤§ï¼Œä¸èƒ½è¶…è¿‡ï¼š"+(maxFileSize/(1024*1024))+"M");
-								continue;
-							}
-							String fileFullName = fileItem.getName();//æ–‡ä»¶å
-							if(fileFullName.length()==0) continue;
-							String postFix;//æ–‡ä»¶ååŠåç¼€
-							if(fileFullName.indexOf(".") != -1){
-								fileName = fileFullName.substring(0, fileFullName.lastIndexOf("."));
-								postFix = fileFullName.substring(fileFullName.lastIndexOf("."));
-							}else{
-								fileName = fileFullName;
-								postFix = "";
-							}
-							postFix = postFix.toLowerCase();
-							//å°†æ–‡ä»¶ä¿å­˜åˆ°ä¸´æ—¶ç›®å½•
-							fileName = "Temp_"+System.currentTimeMillis()+"_"+fileName+postFix;
-							File tempDir = new File(uploadPath+"/temp");
-							if(!tempDir.exists()) tempDir.mkdirs();//å¦‚æœä¸´æ—¶ç›®å½•ä¸å­˜åœ¨åˆ™åˆ›å»ºå®ƒ
-							String filePath = uploadPath+"/temp/"+fileName;
-							File file = new File(filePath);
-							try{
-								fileItem.write(file);
-							}catch(Exception e){
-								System.err.println("æ–‡ä»¶ä¸Šä¼ å‡ºé”™ï¼Œ"+e.getMessage());
-							}
-							paramMap.put("fileName", fileName);//åå°äº¤æ˜“ç±»å¯ä»¥é€šè¿‡è¯¥å‚æ•°è·å–ä¸Šä¼ æ–‡ä»¶å
-							paramMap.put("filePath", filePath);//åå°äº¤æ˜“ç±»å¯ä»¥é€šè¿‡è¯¥å‚æ•°è·å–ä¸Šä¼ æ–‡ä»¶è·¯å¾„
-						}
-					}
-				}
-			}catch(FileUploadException e){
-				System.err.println("æ–‡ä»¶ä¸Šä¼ å¤±è´¥ï¼Œ"+e.getMessage());
-			}
-			/**æ–‡ä»¶ä¸Šä¼ ä»£ç å—ã€ENDã€‘****************************************************************/
-		
-		}else{
-			// è·å–é¡µé¢ä¼ å…¥å‚æ•°çš„åç§°é›†åˆ
-			Enumeration<String> paramNames = request.getParameterNames();
-			while (paramNames.hasMoreElements()) {// å½“é›†åˆä¸­è¿˜å­˜åœ¨å‰©ä½™å…ƒç´ 
-				// ä»é›†åˆä¸­åŒºå±ä¸€ä¸ªå…ƒç´ ï¼Œå¹¶ä¸”å°†æŒ‡é’ˆç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªå…ƒç´ 
-				String name = paramNames.nextElement();// å‚æ•°å
-				String value = request.getParameter(name);// å‚æ•°å€¼
-				// ç½‘é¡µæ–‡æœ¬æ¡†çš„å­—ç¬¦ç¼–ç é»˜è®¤ç»Ÿä¸€ä½¿ç”¨ISO-8859-1ï¼Œè¿™é‡Œéœ€è¦è£…æ¢æˆUTF-8é¿å…å‡ºç°ä¸­åˆä¹±ç 
-				value = new String(value.getBytes("ISO-8859-1"), "UTF-8");
 
-				// å°†é¡µé¢å‚æ•°è®¾ç½®åˆ°ç¯å¢ƒå˜é‡ä¸­
-				request.setAttribute(name, value);
-				// æ·»åŠ åˆ°æ˜ å°„å¯¹è±¡ä¸­
-				paramMap.put(name, value);
-			}
-		}
-		
+        /*
+         * yi¡¢ÏàÓ¦Ç°¶ËÒ³ÃæµÄÇëÇó
+         */
+        // ½«Ò³Ãæ²ÎÊıÉèÖÃµ½¡°¼ü-Öµ¡±¶ÔÓ³Éä¶ÔÏóÖĞ
+        Map<String, String> paramMap = new HashMap<String, String>();
+        System.out.println(request);
+        String contentType = request.getContentType();
+        if (contentType != null && contentType.startsWith("multipart/form-data")) {
 
-		/*
-		 * äºŒã€å¯»æ‰¾äº¤æ˜“æ‰§è¡Œç±»ï¼Œè¿›è¡Œå…·ä½“çš„æ•°æ®å¤„ç†
-		 */
-		/** å–å‡ºURIåœ°å€ä¸­çš„äº¤æ˜“ç  */
-		String uri = request.getRequestURI();
-		int pos1 = uri.lastIndexOf("/");
-		int pos2 = uri.lastIndexOf(".act");
-		/** å­—ç¬¦å­ä¸²æˆªå– */
-		String txcode = uri.substring(pos1 + 1, pos2);
-		request.setAttribute("TXCODE", txcode);
-		
-		
-		String error = null;// äº¤æ˜“å‡ºé”™ä¿¡æ¯
-		String className = null;// äº¤æ˜“ç±»çš„å…¨å
-		String page = null; // ç›®æ ‡è§†å›¾
-		String pageDesc = null; // äº¤æ˜“æè¿°
-		String viewName=null;//è¾“å‡ºé¡µé¢çš„åå­—
-		/** é€šè¿‡äº¤æ˜“ç è·å–äº¤æ˜“é…ç½®ä¿¡æ¯ */
-		Map<String, Object> actionMap = getActionConfig(txcode);
-		if (actionMap == null) {
-			// åœ¨é…ç½®æ–‡ä»¶ä¸­æœªæ‰¾åˆ°ä¸è¯¥äº¤æ˜“ç åŒ¹é…çš„äº¤æ˜“èŠ‚ç‚¹
-			error = "äº¤æ˜“ç ã€" + txcode + "ã€‘ä¸å­˜åœ¨";
 
-		} else {
-			className =(String) actionMap.get("class");
-			pageDesc = (String)actionMap.get("desc");
-			Map<String, String> views = (Map<String, String>)actionMap.get("views");
-			
-			request.setAttribute("PAGE_DESC", pageDesc); // å°†äº¤æ˜“æè¿°è®¾ç½®åˆ°ç¯å¢ƒå˜é‡ä¸­
-			try {
-				// å®ä¾‹åŒ–äº¤æ˜“æ¥å£
-				IAction action = (IAction) Class.forName(className)
-						.newInstance();
-				action.setSession(request.getSession());//å‘äº¤æ˜“ç±»ä¼ å…¥ä¼šè¯å¯¹è±¡
-				Map<String, Object> result = action.doAction(paramMap);// æ‰§è¡Œäº¤æ˜“
-				//æ ¹æ®äº¤æ˜“å±‚çš„setPage()è®¾å®šè¾“å‡ºé¡µé¢
-				page = views.get("");//é»˜è®¤è¾“å‡ºé¡µé¢
-				viewName = action.getPage();
-				if(views.containsKey(viewName)){
-					page = views.get(viewName);
-				}
-				// è·å–é”™è¯¯ä¿¡æ¯ 
-				error = action.getError();
-				int keyCount = result.size();// é”®çš„ä¸ªæ•°
-				String[] keys = result.keySet().toArray(new String[keyCount]);// é”®æ•°ç»„
-				for (String key : keys) {
-					Object value = result.get(key);// å€¼
-					request.setAttribute(key, value);// è®¾ç½®åˆ°ç¯å¢ƒå˜é‡
-				}
-			} catch (InstantiationException e) {
-				error = "äº¤æ˜“å®ä¾‹åŒ–å‡ºé”™ï¼";
-			} catch (IllegalAccessException e) {
-				error ="éæ³•è®¿é—®äº¤æ˜“å‡ºé”™ï¼";
-			} catch (ClassNotFoundException e) {
-				error = "æ‰¾ä¸åˆ°äº¤æ˜“ç±»ã€" + className + "ã€‘";
-			}
-		}
+            // »ñÈ¡ËùÓĞ±íµ¥²¿¼ş
+            Collection<Part> parts = request.getParts();
 
-		/*
-		 * ä¸‰ã€å°†ç»“æœå‘å¸ƒåˆ°ç›®æ ‡è§†å›¾
-		 */
-		if (error != null) {
-			request.setAttribute("ERROR", error);
-			if(!"download".equalsIgnoreCase(viewName)){
-				page = "/views/Error.jsp";
-			}
-			
-		}
+            for (Part part : parts) {
+                // »ñÈ¡±íµ¥×Ö¶ÎµÄÃû³Æ
+                String fieldName = part.getName();
+                // ÅĞ¶ÏÊÇ·ñÎªÎÄ¼ş²¿¼ş
+                if (part.getContentType() != null) {
+                    // ´¦ÀíÎÄ¼şÉÏ´«
+                    String allFileName = part.getSubmittedFileName();
+                    if (allFileName.isEmpty()) {
+                        continue;
+                    }
+                    String fileName;//ÎÄ¼şÃû
+                    try (InputStream input = part.getInputStream()) {
 
-		// å‘å¸ƒï¼ˆé‡å®šå‘ï¼‰åˆ°ç›®æ ‡è§†å›¾
-		application.getRequestDispatcher(page).forward(request, response);
-	}
+                        String uploadPath = Path.of(application.getRealPath(""), "/upload").toString();
+                        //ºóÌ¨½»Ò×Àà¿ÉÒÔÍ¨¹ı¸Ã²ÎÊı»ñÈ¡ÉÏ´«Â·¾¶
+                        paramMap.put("uploadPath", uploadPath);
+                        fileName = "Temp_" + System.currentTimeMillis() + "_" + allFileName;
+                        String filePath = Path.of(uploadPath, "/temp/", fileName).toString();
+                        Path outputPath = Paths.get(filePath);
+                        Files.copy(input, outputPath, StandardCopyOption.REPLACE_EXISTING);
+                        //ºóÌ¨½»Ò×Àà¿ÉÒÔÍ¨¹ı¸Ã²ÎÊı»ñÈ¡ÉÏ´«ÎÄ¼şÃû
+                        paramMap.put("fileName", fileName);
+                        //ºóÌ¨½»Ò×Àà¿ÉÒÔÍ¨¹ı¸Ã²ÎÊı»ñÈ¡ÉÏ´«ÎÄ¼şÂ·¾¶
+                        paramMap.put("filePath", filePath);
+                        System.out.println("filePath:" + filePath);
+                    }
+                } else {
+                    // ´¦ÀíÆÕÍ¨±íµ¥×Ö¶Î
+                    String fieldValue = request.getParameter(fieldName);
+                    System.out.println(fieldValue);
+                    System.out.println(fieldValue);
+                    //´«Èëµ½½»Ò×ÀàµÄ²ÎÊı¶ÔÏó
+                    paramMap.put(fieldName, fieldValue);
+                    //ÉèÖÃµ½ÇëÇó¶ÔÏóÖĞµÄ»·¾³±äÁ¿
+                    request.setAttribute(fieldName, fieldValue);
+                    // ¸ù¾İĞèÒª´¦Àí×Ö¶ÎÖµ
 
-	/*
-	 * è£…è½½äº¤æ˜“é…ç½®æ–‡ä»¶actionlist.xml æ ¹æ®äº¤æ˜“ç æ‰¾å‡ºå¯¹åº”çš„äº¤æ˜“é…ç½®ä¿¡æ¯ï¼ˆäº¤æ˜“æ‰§è¡Œç±»çš„è·¯å¾„ã€ç›®æ ‡é¡µé¢ã€äº¤æ˜“æè¿°ï¼‰
-	 */
-	private static java.util.List<java.util.Map<String,Object>> actionList = null;
-	private static java.util.Map<String,Object> getActionConfig(String txcode) {
-			java.util.Map<String,Object> actionMap = null;
-			if(txcode==null || txcode.length()==0) return actionMap;
-			if(actionList == null){
-				//è£…è½½é…ç½®æ–‡ä»¶
-				java.io.FileInputStream fis = null;
-				try{
-					String path = Controller.class.getClassLoader().getResource("config/").getPath();
-					path = java.net.URLDecoder.decode(path, "UTF-8");//è§£å†³è·¯å¾„ä¸­çš„ä¸­æ–‡ä¹±ç 
-					java.io.File file = new java.io.File(path+"actionlist.xml");//æ–‡ä»¶å¯¹è±¡,å¹¶è”é…ç½®æ–‡ä»¶
-					fis = new java.io.FileInputStream(file);//å°†æ–‡ä»¶è¯»å…¥åˆ°è¾“å…¥æµä¸­
-					javax.xml.parsers.DocumentBuilder docBuilder = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder();
-					org.w3c.dom.Document doc = docBuilder.parse(fis);
-					org.w3c.dom.Element root = doc.getDocumentElement();
-					org.w3c.dom.NodeList nodes = root.getElementsByTagName("action");
-					actionList = new java.util.ArrayList<java.util.Map<String,Object>>();
-					for(int i=0; i<nodes.getLength(); i++){
-						org.w3c.dom.Node node = nodes.item(i);
-						if(node.hasAttributes()){
-							java.util.Map<String,Object> map = new java.util.HashMap<String, Object>();
-							org.w3c.dom.NamedNodeMap attrs = node.getAttributes();
-							String actionName = attrs.getNamedItem("name").getNodeValue();
-							String className = attrs.getNamedItem("class").getNodeValue();
-							String desc = attrs.getNamedItem("desc").getNodeValue();
-							map.put("name", actionName);
-							map.put("class", className);
-							map.put("desc", desc);
-							actionList.add(map);
-							org.w3c.dom.NodeList viewNodes = node.getChildNodes();
-							java.util.Map<String,String> views = new java.util.HashMap<String, String>();
-							for(int j=0; j<viewNodes.getLength(); j++){
-								org.w3c.dom.Node viewNode = viewNodes.item(j);
-								if(viewNode.getNodeName().equals("view")){
-									attrs = viewNode.getAttributes();
-									String viewName = "";
-									org.w3c.dom.Node nameNode = attrs.getNamedItem("name");
-									if(nameNode!=null) viewName=nameNode.getNodeValue(); 
-									String viewPage = viewNode.getTextContent();
-									views.put(viewName, viewPage);
-								}
-							}
-							map.put("views", views);
-						}
-					}
-				}catch(Exception e){
-					System.err.println("è£…è½½äº¤æ˜“é…ç½®æ–‡ä»¶å‡ºé”™ï¼");
-					e.printStackTrace();
-					return null;
-				}finally{
-					if(fis!=null) try{fis.close();}catch(java.io.IOException e){}
-				}
-			}
-			if(actionList != null){
-				for(java.util.Map<String,Object> map:actionList){
-					if(txcode.equals(map.get("name"))){
-						return map;
-					}
-				}
-		}
-		return actionMap;
-	}
+                }
+            }
+
+
+        } else {
+            // »ñÈ¡Ò³Ãæ´«Èë²ÎÊıµÄÃû³Æ¼¯ºÏ
+            Enumeration<String> paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {// µ±¼¯ºÏÖĞ»¹´æÔÚÊ£ÓàÔªËØ
+                // ´Ó¼¯ºÏÖĞÇøÊôÒ»¸öÔªËØ£¬²¢ÇÒ½«Ö¸ÕëÒÆ¶¯µ½ÏÂÒ»¸öÔªËØ
+                String name = paramNames.nextElement();// ²ÎÊıÃû
+                String value = request.getParameter(name);// ²ÎÊıÖµ
+                // ÍøÒ³ÎÄ±¾¿òµÄ×Ö·û±àÂëÄ¬ÈÏÍ³Ò»Ê¹ÓÃISO-8859-1£¬ÕâÀïĞèÒª×°»»³ÉUTF-8±ÜÃâ³öÏÖÖĞÎçÂÒÂë
+//				value = new String(value.getBytes("ISO-8859-1"), "UTF-8");
+
+                // ½«Ò³Ãæ²ÎÊıÉèÖÃµ½»·¾³±äÁ¿ÖĞ
+                request.setAttribute(name, value);
+                // Ìí¼Óµ½Ó³Éä¶ÔÏóÖĞ
+                paramMap.put(name, value);
+            }
+
+        }
+
+
+        /*
+         * ¶ş¡¢Ñ°ÕÒ½»Ò×Ö´ĞĞÀà£¬½øĞĞ¾ßÌåµÄÊı¾İ´¦Àí
+         */
+        /** È¡³öURIµØÖ·ÖĞµÄ½»Ò×Âë */
+        String uri = request.getRequestURI();
+        int pos1 = uri.lastIndexOf("/");
+        int pos2 = uri.lastIndexOf(".act");
+        /** ×Ö·û×Ó´®½ØÈ¡ */
+        String txcode = uri.substring(pos1 + 1, pos2);
+        request.setAttribute("TXCODE", txcode);
+
+
+        String error = null;// ½»Ò×³ö´íĞÅÏ¢
+        String className = null;// ½»Ò×ÀàµÄÈ«Ãû
+        String page = null; // Ä¿±êÊÓÍ¼
+        String pageDesc = null; // ½»Ò×ÃèÊö
+        String viewName = null;//Êä³öÒ³ÃæµÄÃû×Ö
+        /** Í¨¹ı½»Ò×Âë»ñÈ¡½»Ò×ÅäÖÃĞÅÏ¢ */
+        Map<String, Object> actionMap = getActionConfig(txcode);
+        if (actionMap == null) {
+            // ÔÚÅäÖÃÎÄ¼şÖĞÎ´ÕÒµ½Óë¸Ã½»Ò×ÂëÆ¥ÅäµÄ½»Ò×½Úµã
+            error = "½»Ò×Âë¡¾" + txcode + "¡¿²»´æÔÚ";
+
+        } else {
+            className = (String) actionMap.get("class");
+            pageDesc = (String) actionMap.get("desc");
+            Map<String, String> views = (Map<String, String>) actionMap.get("views");
+
+            request.setAttribute("PAGE_DESC", pageDesc); // ½«½»Ò×ÃèÊöÉèÖÃµ½»·¾³±äÁ¿ÖĞ
+            try {
+                // ÊµÀı»¯½»Ò×½Ó¿Ú
+                IAction action = (IAction) Class.forName(className)
+                        .newInstance();
+                action.setSession(request.getSession());//Ïò½»Ò×Àà´«Èë»á»°¶ÔÏó
+                Map<String, Object> result = action.doAction(paramMap);// Ö´ĞĞ½»Ò×
+                //¸ù¾İ½»Ò×²ãµÄsetPage()Éè¶¨Êä³öÒ³Ãæ
+                page = views.get("");//Ä¬ÈÏÊä³öÒ³Ãæ
+                viewName = action.getPage();
+                if (views.containsKey(viewName)) {
+                    page = views.get(viewName);
+                }
+                // »ñÈ¡´íÎóĞÅÏ¢
+                error = action.getError();
+                int keyCount = result.size();// ¼üµÄ¸öÊı
+                String[] keys = result.keySet().toArray(new String[keyCount]);// ¼üÊı×é
+                for (String key : keys) {
+                    Object value = result.get(key);// Öµ
+                    request.setAttribute(key, value);// ÉèÖÃµ½»·¾³±äÁ¿
+                }
+            } catch (InstantiationException e) {
+                error = "½»Ò×ÊµÀı»¯³ö´í£¡";
+            } catch (IllegalAccessException e) {
+                error = "·Ç·¨·ÃÎÊ½»Ò×³ö´í£¡";
+            } catch (ClassNotFoundException e) {
+                error = "ÕÒ²»µ½½»Ò×Àà¡¾" + className + "¡¿";
+            }
+        }
+
+        /*
+         * Èı¡¢½«½á¹û·¢²¼µ½Ä¿±êÊÓÍ¼
+         */
+        if (error != null) {
+            request.setAttribute("ERROR", error);
+            if (!"download".equalsIgnoreCase(viewName)) {
+                page = "/views/Error.jsp";
+            }
+
+        }
+
+        // ·¢²¼£¨ÖØ¶¨Ïò£©µ½Ä¿±êÊÓÍ¼
+        application.getRequestDispatcher(page).forward(request, response);
+    }
+
+    /*
+     * ×°ÔØ½»Ò×ÅäÖÃÎÄ¼şactionlist.xml ¸ù¾İ½»Ò×ÂëÕÒ³ö¶ÔÓ¦µÄ½»Ò×ÅäÖÃĞÅÏ¢£¨½»Ò×Ö´ĞĞÀàµÄÂ·¾¶¡¢Ä¿±êÒ³Ãæ¡¢½»Ò×ÃèÊö£©
+     */
+    private static java.util.List<java.util.Map<String, Object>> actionList = null;
+
+    private static java.util.Map<String, Object> getActionConfig(String txcode) {
+        java.util.Map<String, Object> actionMap = null;
+        if (txcode == null || txcode.length() == 0) return actionMap;
+        if (actionList == null) {
+            //×°ÔØÅäÖÃÎÄ¼ş
+            java.io.FileInputStream fis = null;
+            try {
+                String path = Controller.class.getClassLoader().getResource("config/").getPath();
+                path = java.net.URLDecoder.decode(path, "UTF-8");//½â¾öÂ·¾¶ÖĞµÄÖĞÎÄÂÒÂë
+                java.io.File file = new java.io.File(path + "actionlist.xml");//ÎÄ¼ş¶ÔÏó,²¢ÁªÅäÖÃÎÄ¼ş
+                fis = new java.io.FileInputStream(file);//½«ÎÄ¼ş¶ÁÈëµ½ÊäÈëÁ÷ÖĞ
+                javax.xml.parsers.DocumentBuilder docBuilder = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                org.w3c.dom.Document doc = docBuilder.parse(fis);
+                org.w3c.dom.Element root = doc.getDocumentElement();
+                org.w3c.dom.NodeList nodes = root.getElementsByTagName("action");
+                actionList = new java.util.ArrayList<java.util.Map<String, Object>>();
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    org.w3c.dom.Node node = nodes.item(i);
+                    if (node.hasAttributes()) {
+                        java.util.Map<String, Object> map = new java.util.HashMap<String, Object>();
+                        org.w3c.dom.NamedNodeMap attrs = node.getAttributes();
+                        String actionName = attrs.getNamedItem("name").getNodeValue();
+                        String className = attrs.getNamedItem("class").getNodeValue();
+                        String desc = attrs.getNamedItem("desc").getNodeValue();
+                        map.put("name", actionName);
+                        map.put("class", className);
+                        map.put("desc", desc);
+                        actionList.add(map);
+                        org.w3c.dom.NodeList viewNodes = node.getChildNodes();
+                        java.util.Map<String, String> views = new java.util.HashMap<String, String>();
+                        for (int j = 0; j < viewNodes.getLength(); j++) {
+                            org.w3c.dom.Node viewNode = viewNodes.item(j);
+                            if (viewNode.getNodeName().equals("view")) {
+                                attrs = viewNode.getAttributes();
+                                String viewName = "";
+                                org.w3c.dom.Node nameNode = attrs.getNamedItem("name");
+                                if (nameNode != null) viewName = nameNode.getNodeValue();
+                                String viewPage = viewNode.getTextContent();
+                                views.put(viewName, viewPage);
+                            }
+                        }
+                        map.put("views", views);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("×°ÔØ½»Ò×ÅäÖÃÎÄ¼ş³ö´í£¡");
+                e.printStackTrace();
+                return null;
+            } finally {
+                if (fis != null) try {
+                    fis.close();
+                } catch (java.io.IOException e) {
+                }
+            }
+        }
+        if (actionList != null) {
+            for (java.util.Map<String, Object> map : actionList) {
+                if (txcode.equals(map.get("name"))) {
+                    return map;
+                }
+            }
+        }
+        return actionMap;
+    }
 }

@@ -8,6 +8,8 @@ package cn.gzccc.env;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,13 +17,13 @@ import java.util.Properties;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
 
 import cn.coolcpu.sql.DBConfig;
@@ -79,12 +81,18 @@ public class MyListener implements ServletContextListener, HttpSessionListener,
 			System.out.println("初始化数据库配置文件失败");
 			e.printStackTrace();
 		}
-		try{Class.forName(DBConfig.DRV).newInstance();}
+		try{ Class<?> clazz = Class.forName(DBConfig.DRV);
+			Constructor<?> constructor = clazz.getDeclaredConstructor();
+			Object instance = constructor.newInstance();}
 		catch(ClassNotFoundException e){e.printStackTrace();}
 		catch(IllegalAccessException e){e.printStackTrace();}
-		catch(InstantiationException e){e.printStackTrace();}
-		
-		//测试数据库
+		catch(InstantiationException e){e.printStackTrace();} catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+        //测试数据库
 		try{
 			if(DBConfig.ISJNDI){
 				DBConfig.DSRC = (DataSource)((new InitialContext()).lookup(DBConfig.JNDI));

@@ -1,4 +1,4 @@
-ï»¿package cn.gzccc.util;
+package cn.gzccc.util;
 
 import java.text.*;
 import java.util.*;
@@ -14,7 +14,7 @@ public class DateUtil {
 	private static int actionSequ = 0;
 
 	/**
-	 * å–å¾—å½“å‰æ—¥æœŸ
+	 * È¡µÃµ±Ç°ÈÕÆÚ
 	 * yyyy-MM-dd
 	 */
 	public static String getCurrentDate() {
@@ -23,7 +23,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * å–å¾—å½“å‰æ—¥æœŸ
+	 * È¡µÃµ±Ç°ÈÕÆÚ
 	 * yyyyMMdd
 	 */
 	public static String getUFCurrentDate() {
@@ -32,7 +32,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * å–å¾—å½“å‰æ—¶é—´
+	 * È¡µÃµ±Ç°Ê±¼ä
 	 * HH:mm:ss
 	 */
 	public static String getCurrentTime() {
@@ -41,7 +41,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * å–å¾—å½“å‰æ—¶é—´
+	 * È¡µÃµ±Ç°Ê±¼ä
 	 * HHmmss
 	 */
 	public static String getUFCurrentTime() {
@@ -101,8 +101,8 @@ public class DateUtil {
 	}
 	
 	/**
-	 * è·å–ä¸¤ä¸ªæ—¥æœŸä¹‹é—´çš„å¤©<br>
-	 * æ ¼å¼ä¸ºyyyyMMdd
+	 * »ñÈ¡Á½¸öÈÕÆÚÖ®¼äµÄÌì<br>
+	 * ¸ñÊ½ÎªyyyyMMdd
 	 * @param beginDate 
 	 * @param endDate
 	 */
@@ -115,14 +115,14 @@ public class DateUtil {
 	}
 	
 	/**
-	 * å–å¾—æ ¼å¼æ—¥æœŸçš„æœˆ
+	 * È¡µÃ¸ñÊ½ÈÕÆÚµÄÔÂ
 	 */
 	public String getMonthByFormatDate(String dateStr){
 		return dateStr.substring(5, 7);
 	}
 	
 	/**
-	 * æŸå¹´æŸæœˆçš„æœ€å¤§å¤©
+	 * Ä³ÄêÄ³ÔÂµÄ×î´óÌì
 	 */
 	public static int getMaxDays(String year,String month){
 		int m=Integer.parseInt(month);
@@ -152,15 +152,15 @@ public class DateUtil {
 	}
 	
 	/**
-	 * è·å–å½“å‰æ—¶é—´æˆ³<br>
+	 * »ñÈ¡µ±Ç°Ê±¼ä´Á<br>
 	 * @param formatType
 	 * 0-->yyyyMMddHHmmssxxx<br>
 	 * 1-->yyyy-MM-dd HH:mm:ss xxx<br>
 	 * 2-->yyyy-MM-dd HH:mm:ss<br>
 	 * 3-->yyyy-MM-dd<br>
 	 * 4-->yyyy-M-d<br>
-	 * 5-->yyyyå¹´MMæœˆddæ—¥<br>
-	 * 6-->yyyyå¹´Mæœˆdæ—¥<br>
+	 * 5-->yyyyÄêMMÔÂddÈÕ<br>
+	 * 6-->yyyyÄêMÔÂdÈÕ<br>
 	 */
 	public static String fullDateTime(int formatType){
 		Calendar dt = Calendar.getInstance();
@@ -187,16 +187,16 @@ public class DateUtil {
 		}else if(formatType==4){
 			return year+"-"+((month.length()>1&&month.charAt(0)=='0')?month.charAt(1):month)+"-"+((day.length()>1&&day.charAt(0)=='0')?day.charAt(1):day);
 		}else if(formatType==5){
-			return year+"å¹´"+month+"æœˆ"+day+"æ—¥";
+			return year+"Äê"+month+"ÔÂ"+day+"ÈÕ";
 		}else if(formatType==6){
-			return year+"å¹´"+((month.length()>1&&month.charAt(0)=='0')?month.charAt(1):month)+"æœˆ"+((day.length()>1&&day.charAt(0)=='0')?day.charAt(1):day)+"æ—¥";
+			return year+"Äê"+((month.length()>1&&month.charAt(0)=='0')?month.charAt(1):month)+"ÔÂ"+((day.length()>1&&day.charAt(0)=='0')?day.charAt(1):day)+"ÈÕ";
 		}else{
 			return year+month+day+hour+minute+second+millis;
 		}
 	}
 	
 	/**
-	 * è·å–æ—¥æœŸæ‰€åœ¨å‘¨çš„æ—¥æœŸé›†<br>
+	 * »ñÈ¡ÈÕÆÚËùÔÚÖÜµÄÈÕÆÚ¼¯<br>
 	 * @param yyyyMMdd<br>
 	 * @return datesInWeek<br>
 	 */
@@ -208,8 +208,8 @@ public class DateUtil {
 		try{
 			calendar.setTime(unformatDate.parse(xDate));
 			d.setTime(calendar.getTimeInMillis());
-			dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);//ä¸€å‘¨é‡Œçš„ç¬¬å‡ å¤©,æ˜ŸæœŸæ—¥ä¸º1,æ˜ŸæœŸå…­ä¸º7
-			dayOfWeek = dayOfWeek - 1;//è½¬æ¢æˆæ˜ŸæœŸå‡ ,æ˜ŸæœŸæ—¥ä¸º0,æ˜ŸæœŸå…­ä¸º6
+			dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);//Ò»ÖÜÀïµÄµÚ¼¸Ìì,ĞÇÆÚÈÕÎª1,ĞÇÆÚÁùÎª7
+			dayOfWeek = dayOfWeek - 1;//×ª»»³ÉĞÇÆÚ¼¸,ĞÇÆÚÈÕÎª0,ĞÇÆÚÁùÎª6
 		}catch(Exception e){
 			return null;
 		}
@@ -221,26 +221,26 @@ public class DateUtil {
 	}
 	
 	/**
-	 * è·å–æ—¥æœŸå¯¹åº”çš„æ˜ŸæœŸå‡ <br>
+	 * »ñÈ¡ÈÕÆÚ¶ÔÓ¦µÄĞÇÆÚ¼¸<br>
 	 * @param yyyyMMdd<br>
 	 * @param type EN CN NUM<br>
 	 * @return dayOfWeek<br>
 	 */
 	public static String dayOfWeek(String xDate, String type){
 		String[] enWeeks = "Sun,Mon,Tues,Wed,Thurs,Fri,Sat".split(",");
-		String[] cnWeeks = "æ˜ŸæœŸæ—¥,æ˜ŸæœŸä¸€,æ˜ŸæœŸäºŒ,æ˜ŸæœŸä¸‰,æ˜ŸæœŸå››,æ˜ŸæœŸäº”,æ˜ŸæœŸå…­".split(",");
+		String[] cnWeeks = "ĞÇÆÚÈÕ,ĞÇÆÚÒ»,ĞÇÆÚ¶ş,ĞÇÆÚÈı,ĞÇÆÚËÄ,ĞÇÆÚÎå,ĞÇÆÚÁù".split(",");
 		Calendar calendar = Calendar.getInstance();
 		try{calendar.setTime(unformatDate.parse(xDate));}catch(ParseException e){return null;}
 		int i=0;
-		i = calendar.get(Calendar.DAY_OF_WEEK);//ä¸€å‘¨é‡Œçš„ç¬¬å‡ å¤©,æ˜ŸæœŸæ—¥ä¸º1,æ˜ŸæœŸå…­ä¸º7
-		i--;//è½¬æ¢æˆæ˜ŸæœŸå‡ ,æ˜ŸæœŸæ—¥ä¸º0,æ˜ŸæœŸå…­ä¸º6
+		i = calendar.get(Calendar.DAY_OF_WEEK);//Ò»ÖÜÀïµÄµÚ¼¸Ìì,ĞÇÆÚÈÕÎª1,ĞÇÆÚÁùÎª7
+		i--;//×ª»»³ÉĞÇÆÚ¼¸,ĞÇÆÚÈÕÎª0,ĞÇÆÚÁùÎª6
 		if("EN".equals(type)) return enWeeks[i];
 		else if("CN".equals(type)) return cnWeeks[i];
 		else return String.valueOf(i);
 	}
 	
 	/**
-	 * è·å–æ—¥æœŸã€æ˜ŸæœŸ<br>
+	 * »ñÈ¡ÈÕÆÚ¡¢ĞÇÆÚ<br>
 	 * @param
 	 * @return
 	 */
@@ -251,7 +251,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * è·å–å½“å‰æµæ°´å·<br>
+	 * »ñÈ¡µ±Ç°Á÷Ë®ºÅ<br>
 	 * @return yyyyMMddHHmmssiiii<br>
 	 */
 	synchronized public static String getFlowNo(){
@@ -284,7 +284,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * è·å–å½“å‰æµæ°´å·<br>
+	 * »ñÈ¡µ±Ç°Á÷Ë®ºÅ<br>
 	 * @return yyyyMMddHHmmssiiii<br>
 	 */
 	synchronized public static String getActionNo(){
@@ -297,11 +297,21 @@ public class DateUtil {
 		hour   = String.valueOf(dt.get(Calendar.HOUR_OF_DAY));
 		minute = String.valueOf(dt.get(Calendar.MINUTE));
 		second = String.valueOf(dt.get(Calendar.SECOND));
-		if(month.length()==1) month="0"+month;
-		if(day.length()==1) day="0"+day;
-		if(hour.length()==1) hour="0"+hour;
-		if(minute.length()==1) minute="0"+minute;
-		if(second.length()==1) second="0"+second;
+		if(month.length()==1) {
+            month="0"+month;
+        }
+		if(day.length()==1) {
+            day="0"+day;
+        }
+		if(hour.length()==1) {
+            hour="0"+hour;
+        }
+		if(minute.length()==1) {
+            minute="0"+minute;
+        }
+		if(second.length()==1) {
+            second="0"+second;
+        }
 		full = year+month+day+hour+minute+second;
 		if(full.compareTo(actionDate)>0){
 			actionDate = full;
@@ -309,10 +319,15 @@ public class DateUtil {
 		}else if(actionSequ<9999){
 			actionSequ++;
 		}
-		if(actionSequ<10) sequ="000"+String.valueOf(actionSequ);
-		else if(actionSequ<100) sequ="00"+String.valueOf(actionSequ);
-		else if(actionSequ<1000) sequ="0"+String.valueOf(actionSequ);
-		else sequ=String.valueOf(actionSequ);
+		if(actionSequ<10) {
+            sequ="000"+String.valueOf(actionSequ);
+        } else if(actionSequ<100) {
+            sequ="00"+String.valueOf(actionSequ);
+        } else if(actionSequ<1000) {
+            sequ="0"+String.valueOf(actionSequ);
+        } else {
+            sequ=String.valueOf(actionSequ);
+        }
 		return full+sequ;
 	}
 }

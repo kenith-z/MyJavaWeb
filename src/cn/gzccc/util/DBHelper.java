@@ -1,4 +1,4 @@
-ï»¿package cn.gzccc.util;
+package cn.gzccc.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,35 +7,35 @@ import java.util.*;
 
 public class DBHelper {
 	
-	private static String DRV = "com.mysql.jdbc.Driver";//é©±åŠ¨ç¨‹åº
-	private static String URL = "jdbc:mysql://127.0.0.1:3306/testdb";//è¿æ¥åœ°å€
-	private static String USR = "java";//ç”¨æˆ·å
-	private static String PWD = "java";//å¯†ç 
-	private static DBHelper dbHelper;//é™æ€å®ä¾‹
-	private Connection conn = null;//è¿æ¥ç®¡é“
-	private PreparedStatement psmt = null;//é¢„ç¼–è¯‘è§£é‡Šå™¨
-	private Statement stmt = null;//è¯­æ³•è§£é‡Šå™¨
-	private ResultSet rest = null;//æ•°æ®ç»“æœé›†
-	private ResultSetMetaData rsmd = null;//æ•°æ®ç›¸å…³ä¿¡æ¯ï¼ˆå­—æ®µåç­‰ï¼‰
+	private static String DRV = "com.mysql.jdbc.Driver";//Çı¶¯³ÌĞò
+	private static String URL = "jdbc:mysql://127.0.0.1:3306/testdb";//Á¬½ÓµØÖ·
+	private static String USR = "java";//ÓÃ»§Ãû
+	private static String PWD = "java";//ÃÜÂë
+	private static DBHelper dbHelper;//¾²Ì¬ÊµÀı
+	private Connection conn = null;//Á¬½Ó¹ÜµÀ
+	private PreparedStatement psmt = null;//Ô¤±àÒë½âÊÍÆ÷
+	private Statement stmt = null;//Óï·¨½âÊÍÆ÷
+	private ResultSet rest = null;//Êı¾İ½á¹û¼¯
+	private ResultSetMetaData rsmd = null;//Êı¾İÏà¹ØĞÅÏ¢£¨×Ö¶ÎÃûµÈ£©
 	
 	static {
 		try{
-			//è£…è½½å±æ€§æ–‡ä»¶
+			//×°ÔØÊôĞÔÎÄ¼ş
 			String path = DBHelper.class.getClassLoader().getResource("config/").getPath();
-			path = java.net.URLDecoder.decode(path, "UTF-8");//è§£å†³è·¯å¾„ä¸­çš„ä¸­æ–‡ä¹±ç 
-			File file = new File(path+"db.properties");//æ–‡ä»¶å¯¹è±¡,å¹¶è”é…ç½®æ–‡ä»¶
-			FileInputStream fis = new FileInputStream(file);//å°†æ–‡ä»¶è¯»å…¥åˆ°è¾“å…¥æµä¸­
-			java.util.Properties prop = new java.util.Properties();//å±æ€§å¯¹è±¡
+			path = java.net.URLDecoder.decode(path, "UTF-8");//½â¾öÂ·¾¶ÖĞµÄÖĞÎÄÂÒÂë
+			File file = new File(path+"db.properties");//ÎÄ¼ş¶ÔÏó,²¢ÁªÅäÖÃÎÄ¼ş
+			FileInputStream fis = new FileInputStream(file);//½«ÎÄ¼ş¶ÁÈëµ½ÊäÈëÁ÷ÖĞ
+			java.util.Properties prop = new java.util.Properties();//ÊôĞÔ¶ÔÏó
 			prop.load(fis);
 			fis.close();
 			DRV = prop.getProperty("drv");
 			URL = prop.getProperty("url");
 			USR = prop.getProperty("usr");
 			PWD = prop.getProperty("pwd");
-			//è£…è½½JDBCé©±åŠ¨ç¨‹åº
+			//×°ÔØJDBCÇı¶¯³ÌĞò
 			Class.forName(DRV).newInstance();
 		}catch(Exception e){
-			System.err.println("è¯»å–æ•°æ®åº“é…ç½®æ–‡ä»¶å‡ºé”™");
+			System.err.println("¶ÁÈ¡Êı¾İ¿âÅäÖÃÎÄ¼ş³ö´í");
 		}
 	}
 	
@@ -47,7 +47,7 @@ public class DBHelper {
 		return dbHelper;
 	}
 	
-	//è·å–è¿æ¥
+	//»ñÈ¡Á¬½Ó
 	public synchronized Connection getConn() throws SQLException {
 		try{
 			Connection conn = DriverManager.getConnection(URL, USR, PWD);
@@ -57,7 +57,7 @@ public class DBHelper {
 		}
 	}
 	
-	//å…³é—­è¿æ¥
+	//¹Ø±ÕÁ¬½Ó
 	public synchronized void closeDB() {
 		if(rest!=null) try{rest.close();}catch(SQLException e){}
 		if(psmt!=null) try{psmt.close();}catch(SQLException e){}
@@ -66,7 +66,7 @@ public class DBHelper {
 	}
 	
 	/**
-	 * æ‰§è¡ŒæŸ¥è¯¢,è¿”å›ç»“æœ
+	 * Ö´ĞĞ²éÑ¯,·µ»Ø½á¹û
 	 * @param sql
 	 * @return
 	 * @throws SQLException
@@ -95,9 +95,9 @@ public class DBHelper {
 	}
 	
 	/**
-	 * æ‰§è¡Œæ›´æ–°ã€åˆ é™¤ã€æ’å…¥(UPDATEã€DELETEã€INSERT)<br>
+	 * Ö´ĞĞ¸üĞÂ¡¢É¾³ı¡¢²åÈë(UPDATE¡¢DELETE¡¢INSERT)<br>
 	 * @param sql<br>
-	 * @returnè¡¨ç¤ºæ”¶åˆ°å½±å“çš„è®°å½•æ•°
+	 * @return±íÊ¾ÊÕµ½Ó°ÏìµÄ¼ÇÂ¼Êı
 	 * @throws SQLException
 	 * @throws Exception
 	 */
@@ -117,7 +117,7 @@ public class DBHelper {
 		return result;
 	}
 	
-	//é¢„ç¼–è¯‘æ‰§è¡Œæ›´æ–°ã€åˆ é™¤ã€æ’å…¥
+	//Ô¤±àÒëÖ´ĞĞ¸üĞÂ¡¢É¾³ı¡¢²åÈë
 	public int update(String sql, Vector<Object[]> params) throws SQLException, Exception {
 		int result = 0;
 		if(sql==null || params==null || params.isEmpty()) return 0;

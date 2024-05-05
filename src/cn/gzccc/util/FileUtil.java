@@ -1,10 +1,10 @@
-ï»¿package cn.gzccc.util;
+package cn.gzccc.util;
 
 import java.io.*;
 
 public class FileUtil {
 	
-	//åˆ é™¤æ•´ä¸ªç›®å½•
+	//É¾³ýÕû¸öÄ¿Â¼
 	public static void removeDir(File dir){
 		if(dir.isFile()){
 			dir.delete();

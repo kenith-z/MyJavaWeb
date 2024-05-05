@@ -7,7 +7,7 @@
  
 <body>
 ${map.name}<br/>
-<img src="${PATH}/image/idiom/${map.img_name}"/>
+<img src="${PATH}/upload/image/idiom/${map.img_name}"/>
 
 
 <%@include file="../Foot.jsp" %>

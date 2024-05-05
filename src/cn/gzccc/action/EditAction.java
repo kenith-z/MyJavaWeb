@@ -78,6 +78,7 @@ public class EditAction extends BaseAction implements IAction{
 					//避免将成语名称修改成与其他成语同名
 					sql="SELECT * FROM cn_idiom WhERE "
 							+ "name='"+word+"' AND item_id<>'"+itemId+"' ";
+					System.out.println(sql);
 					list = dbh.query(sql);
 					if(!list.isEmpty()){
 						setError("该成语【"+word+"】已经在数据库存在!");
@@ -91,16 +92,19 @@ public class EditAction extends BaseAction implements IAction{
 							+"provenance='"+provenance+"',"
 							+"example='"+example+"' "
 							+"WHERE item_id='"+itemId+"' ";
+					System.out.println(sql);
 					dbh.update(sql);
 					//将刚修改的成语查询并显示到页面上
 					sql = "SELECT * FROM cn_idiom WHERE item_id='"+itemId+"' ";
 					list = dbh.query(sql);//查询数据库
 					Map<String,String> map = list.get(0);
+					System.out.println(map);
 					result.put("map",map);
 					result.put("list",list);
 				}
 				
 			}catch(Exception e){
+				System.err.println(e.getMessage());
 				setError("出错【"+e.getMessage()+"】");
 				
 			}

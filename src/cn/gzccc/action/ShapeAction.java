@@ -1,7 +1,10 @@
-/*
- * å­—å½¢æˆè¯­æŸ¥è¯¢äº¤æ˜“æ‰§è¡Œç±»
- */
 package cn.gzccc.action;
+
+/**
+ * @author Kenith-Z
+ * @version 1.0.0
+ * @since 2024-05-04 14:24
+ */
 
 
 import java.util.List;
@@ -16,111 +19,109 @@ import cn.gzccc.ide.IAction;
 import cn.gzccc.util.DBHelper;
 
 public class ShapeAction extends BaseAction implements IAction{
-	
-	private final int POS_COUNT=9;//å­—å‡ºç°çš„ä½ç½®ä¸ªæ•°
-	/*
-	 * å®ç°æ‰§è¡Œå‡½æ•°çš„ç»†èŠ‚
-	 */
-	@Override
-	public Map< String, Object> doAction(Map< String, String> paramMap) {
-		/*
-		 * ä¸€ã€è·å–é¡µé¢ä¼ å…¥å‚æ•°
-		 */
-		String word = paramMap.get("word");
-		String[] posChars = new String[POS_COUNT];//å‡ºç°åœ¨å„ä¸ªä½ç½®ä¸Šçš„å­—çš„æ•°ç»„
-		
-		for(int i=0;i<POS_COUNT; i++){
-			posChars[i] = paramMap.get("wd"+(i+1));
-		}
-		
-		/*
-		 * äºŒã€äº¤æ˜“ç»†èŠ‚
-		 */
-		if(word != null){
-			//Wordä¸ä¸ºç©ºæ—¶é€šè¿‡æäº¤è¡¨å•è¿›æ¥äº¤æ˜“
-			if(word.trim().length()==0){
-				boolean posCharsIsEmpty=true;//é»˜è®¤ä½ç½®æ•°ç»„å†…å®¹å…¨æ²¡å¡«
-				for(String s:posChars){
-					if(s.length()>0){
-						posCharsIsEmpty=false;
-						break;
-					}
-				}
-				if(posCharsIsEmpty){
-					setError("è¯·è¾“å…¥æˆè¯­åŒ¹é…å­—æ ·ï¼Œå¦‚ï¼šAABB!æˆ–æŸä¸ªä½ç½®çš„å­—");
-					return result;
-				}
-				
-			}
-			//æ ¹æ®ç¬¦åˆæ¡ä»¶æŸ¥è¯¢æ•°æ®åº“
-			DataView dataView = null; //æ•°æ®æŸ¥è¯¢ç»“æœè§†çª—
-			List<RecordBean> list = null; //æŸ¥è¯¢ç»“æœé›†
-			
-			word = word.trim();//å»é™¤ç©ºæ ¼
-			//å»é™¤å­—ç¬¦ä¸²çš„å­—æ•°,åœ¨UTF-8å­—ç¬¦ç¼–ç  ä¸‹ï¼Œä¸€ä¸ªæ±‰å­—å 3ä¸ªå­—èŠ‚
-			int charCount = word.length();
-			//è½¬å‡ºä¸€ä¸ªå­—ç¬¦æ•°ç»„
-			char[] cArray = word.toCharArray();
-			//æ ¹æ®ç”¨æˆ·è¾“å…¥çš„å­—æ ·ï¼ŒåŠ¨æ€æ‹¼æ¥SQL,SQlè¯­æ³•è§„èŒƒçº¦å®šä¸‹æ ‡ä»1å¼€å§‹
-			String sql = "SELECT * FROM cn_idiom WHERE 1=1 ";
-			//æ ¹æ®å­—æ ·æŸ¥è¯¢
-			if(charCount > 0){
-				sql +="AND LENGTH(name)="+(charCount*3)+" ";
-				for(int i=0;i<charCount;i++){
-					if(cArray[i] == ','||cArray[i] == 'ï¼Œ'){
-						sql +="AND SUBSTRING(name,"+(i+1)+",1)='ï¼Œ' ";
-					
-					}else{
-						for(int j=i+1; j<charCount;j++){
-							if(cArray[j] == ','||cArray[j] == 'ï¼Œ') continue;
-							String left = "SUBSTRING(name,"+(i+1)+",1)";
-							String right = "SUBSTRING(name,"+(j+1)+",1)";
-							String opt = (cArray[i]==cArray[j])?"=":"<>";
-							String and= "AND "+left+opt+right+" ";
-							sql+= and;
-						}
-					}
-					
-				}
-			}
-			//æ ¹æ®å­—å‡ºç°çš„ä½ç½®æŸ¥è¯¢
-			for(int i=0;i<POS_COUNT; i++){
-				if(posChars[i].length()>0){
-					sql +="AND SUBSTRING(name,"+(i+1)+",1)='"+posChars[i]+"' ";
-				}	
-			}
-			
-			sql +="ORDER BY name";
-			int pageSize=AppEnv.PAGE_SIZE,page=1;//åˆ†é¡µæ ‡è®°
-			try{page=Integer.parseInt(paramMap.get("page"));}catch(Exception e){;}
-			try{
-				sqlBridge = SQLBridgeFactory.bindInstance(getClass().getName());// è·å–æ•°æ®åº“æ¡¥
-				
-				dataView = sqlBridge.executeQuery(sql, page, pageSize);//åˆ†é¡µ
-				
-				list = dataView.getResult();//å°†ç»“æœé›†ä½œä¸ºç¯å¢ƒå˜é‡ï¼Œè®¾ç½®åˆ°å½“å‰é¡µé¢ä¸­ï¼Œä½¿å¾—åœ¨JSPé¡µé¢ä¸­å¯ä»¥ç”¨JSTLè¯­æ³•æ“ä½œç»“æœé›†
-				result.put("rowsCount", dataView.getRowsCount());
-				result.put("page", dataView.getPage());
-				result.put("pageCount", dataView.getPagesCount());
-				result.put("isFirstPage", dataView.isFirstPage());
-				result.put("isLastPage", dataView.isLastPage());
-				result.put("list", bean2Map(list));
-			}catch(Exception e){
-				setError("æŸ¥è¯¢æˆè¯­å‡ºé”™ã€"+e.getMessage()+"ã€‘");
-				
-			}finally {
-				SQLBridgeFactory.freeInstance(sqlBridge);//é‡Šæ”¾æ•°æ®åº“æ¡¥
-			}
-		
-		}
-		
-		/*
-		 * è¾“å…¥ç»“æœ
-		 */
-		result.put("posCount",POS_COUNT);
-		result.put("posChars",posChars);
-		return result;
-		
-	}
+
+    private final int POS_COUNT=9;//×Ö³öÏÖµÄÎ»ÖÃ¸öÊı
+    /*
+     * ÊµÏÖÖ´ĞĞº¯ÊıµÄÏ¸½Ú
+     */
+    @Override
+    public Map< String, Object> doAction(Map< String, String> paramMap) {
+        /*
+         * Ò»¡¢»ñÈ¡Ò³Ãæ´«Èë²ÎÊı
+         */
+        String word = paramMap.get("word");
+        String[] posChars = new String[POS_COUNT];//³öÏÖÔÚ¸÷¸öÎ»ÖÃÉÏµÄ×ÖµÄÊı×é
+
+        for(int i=0;i<POS_COUNT; i++){
+            posChars[i] = paramMap.get("wd"+(i+1));
+        }
+
+        /*
+         * ¶ş¡¢½»Ò×Ï¸½Ú
+         */
+        if(word != null){
+            //Word²»Îª¿ÕÊ±Í¨¹ıÌá½»±íµ¥½øÀ´½»Ò×
+            if(word.trim().length()==0){
+                boolean posCharsIsEmpty=true;//Ä¬ÈÏÎ»ÖÃÊı×éÄÚÈİÈ«Ã»Ìî
+                for(String s:posChars){
+                    if(s.length()>0){
+                        posCharsIsEmpty=false;
+                        break;
+                    }
+                }
+                if(posCharsIsEmpty){
+                    setError("ÇëÊäÈë³ÉÓïÆ¥Åä×ÖÑù£¬Èç£ºAABB!»òÄ³¸öÎ»ÖÃµÄ×Ö");
+                    return result;
+                }
+
+            }
+            //¸ù¾İ·ûºÏÌõ¼ş²éÑ¯Êı¾İ¿â
+            DataView dataView = null; //Êı¾İ²éÑ¯½á¹ûÊÓ´°
+            List<RecordBean> list = null; //²éÑ¯½á¹û¼¯
+
+            word = word.trim();//È¥³ı¿Õ¸ñ
+            //È¥³ı×Ö·û´®µÄ×ÖÊı,ÔÚUTF-8×Ö·û±àÂë ÏÂ£¬Ò»¸öºº×ÖÕ¼3¸ö×Ö½Ú
+            int charCount = word.length();
+            //×ª³öÒ»¸ö×Ö·ûÊı×é
+            char[] cArray = word.toCharArray();
+            //¸ù¾İÓÃ»§ÊäÈëµÄ×ÖÑù£¬¶¯Ì¬Æ´½ÓSQL,SQlÓï·¨¹æ·¶Ô¼¶¨ÏÂ±ê´Ó1¿ªÊ¼
+            String sql = "SELECT * FROM cn_idiom WHERE 1=1 ";
+            //¸ù¾İ×ÖÑù²éÑ¯
+            if(charCount > 0){
+                sql +="AND LENGTH(name)="+(charCount*3)+" ";
+                for(int i=0;i<charCount;i++){
+                    if(cArray[i] == ',' || cArray[i] == '£¬'){
+                        sql += "AND SUBSTRING(name,"+(i+1)+",1)='£¬' ";
+                        continue;
+                    }
+                    for(int j=i+1; j<charCount;j++){
+                        if(cArray[j] == ','||cArray[j] == '£¬') {continue;}
+                        String left = "SUBSTRING(name,"+(i+1)+",1)";
+                        String right = "SUBSTRING(name,"+(j+1)+",1)";
+                        String opt = (cArray[i]==cArray[j])?"=":"<>";
+                        String and= "AND "+left+opt+right+" ";
+                        sql+= and;
+                    }
+                }
+            }
+            //¸ù¾İ×Ö³öÏÖµÄÎ»ÖÃ²éÑ¯
+            for(int i=0;i<POS_COUNT; i++){
+                if(posChars[i].length()>0){
+                    sql +="AND SUBSTRING(name,"+(i+1)+",1)='"+posChars[i]+"' ";
+                }
+            }
+
+            sql +="ORDER BY name";
+            int pageSize=AppEnv.PAGE_SIZE,page=1;//·ÖÒ³±ê¼Ç
+            try{page=Integer.parseInt(paramMap.get("page"));}catch(Exception e){;}
+            try{
+                sqlBridge = SQLBridgeFactory.bindInstance(getClass().getName());// »ñÈ¡Êı¾İ¿âÇÅ
+
+                dataView = sqlBridge.executeQuery(sql, page, pageSize);//·ÖÒ³
+
+                list = dataView.getResult();//½«½á¹û¼¯×÷Îª»·¾³±äÁ¿£¬ÉèÖÃµ½µ±Ç°Ò³ÃæÖĞ£¬Ê¹µÃÔÚJSPÒ³ÃæÖĞ¿ÉÒÔÓÃJSTLÓï·¨²Ù×÷½á¹û¼¯
+                result.put("rowsCount", dataView.getRowsCount());
+                result.put("page", dataView.getPage());
+                result.put("pageCount", dataView.getPagesCount());
+                result.put("isFirstPage", dataView.isFirstPage());
+                result.put("isLastPage", dataView.isLastPage());
+                result.put("list", bean2Map(list));
+            }catch(Exception e){
+                setError("²éÑ¯³ÉÓï³ö´í¡¾"+e.getMessage()+"¡¿");
+
+            }finally {
+                SQLBridgeFactory.freeInstance(sqlBridge);//ÊÍ·ÅÊı¾İ¿âÇÅ
+            }
+
+        }
+
+        /*
+         * ÊäÈë½á¹û
+         */
+        result.put("posCount",POS_COUNT);
+        result.put("posChars",posChars);
+        return result;
+
+    }
 
 }
